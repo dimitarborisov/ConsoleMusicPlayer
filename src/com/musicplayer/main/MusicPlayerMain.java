@@ -201,6 +201,6 @@ public class MusicPlayerMain {
 	
 	
 	private void printSeparator(){
-		System.out.println("------------------------------");
+		System.out.println("-------------------------------");
 	}
 }
