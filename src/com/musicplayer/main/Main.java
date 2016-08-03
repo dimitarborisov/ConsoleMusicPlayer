@@ -6,5 +6,6 @@ public class Main {
 		MusicPlayerMain musicPlayer = new MusicPlayerMain();
 		
 		musicPlayer.startPlayer();
+		System.exit(0);
 	}
 }

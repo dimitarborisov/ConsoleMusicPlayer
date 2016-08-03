@@ -79,8 +79,22 @@ public class MusicPlayerMain {
 			
 			if(command.equalsIgnoreCase("volume") || command.equalsIgnoreCase("v")){
 				System.out.print("\r>");
-				int i = sc.nextInt();
-				setMusicVolume(i);
+				try{
+					int i = sc.nextInt();
+					setMusicVolume(i);
+				}catch(Exception e){
+					System.out.println("Pleace enter a valid [int]");
+				}
+			}
+			
+			if(command.equalsIgnoreCase("select")){
+				System.out.print("\r>");
+				try{
+					int i = sc.nextInt();
+					setCurrentSong(i);
+				}catch(Exception e){
+					System.out.println("Pleace enter a valid [int]");
+				}
 			}
 
 			System.out.print("\r>>");
@@ -88,9 +102,19 @@ public class MusicPlayerMain {
 		}
 		
 		
-		sc.close();
-		mp.dispose();
+		//sc.close();
+		//mp.dispose();
 		System.out.println("Bye Bye!");
+	}
+	
+	private void setCurrentSong(int i){
+		
+		if(playList.isEmpty() || i > (playList.size()-1)){
+			System.out.println("Please enter a valid playlist number");
+		}else{
+			currentSong = i;
+			//playMusic();
+		}
 	}
 	
 	private void setMusicVolume(int i){
@@ -116,8 +140,13 @@ public class MusicPlayerMain {
 	
 	private void printPlaylist(){
 		printSeparator();
-		for(File f: playList){
-			System.out.println(f.getName());
+		
+		for(int i = 0; i < playList.size(); i++){
+			if(i == currentSong){
+				System.out.println("* " + i + ": " + playList.get(i).getName());
+			}else{
+				System.out.println("  " + i + ": " + playList.get(i).getName());
+			}
 		}
 		printSeparator();
 	}
@@ -149,6 +178,10 @@ public class MusicPlayerMain {
 	private void playMusic() {
 		if (currentSong > -1) {
 			try {
+				if(mp.getMP() != null){
+					mp.dispose();
+				}
+				
 				mp.load(playList.get(currentSong).toURI().toURL());
 				//System.out.println(playList.get(currentSong).getName());
 
