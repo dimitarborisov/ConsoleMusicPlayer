@@ -17,3 +17,8 @@ Simple music player controlled from the console (no GUI)
   -                  expects a valid integer (number of the song in the playlist)
 - `seek`           : Allows to skip to given time (seconds)
    -                 expects a valid integer (seconds to jump to)
+
+---
+
+This project can be imported into eclipse by `File` -> `Import` -> `General` -> `Existing Project into Workspace`  
+To run and test it directly there is an included `Jar` that can be used. The file is located at [`jar/MusicPlayer.jar`](jar/MusicPlayer.jar)
