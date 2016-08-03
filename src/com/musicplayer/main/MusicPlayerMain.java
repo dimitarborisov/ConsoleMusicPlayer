@@ -22,8 +22,24 @@ public class MusicPlayerMain {
 
 	public MusicPlayerMain() {
 
-		commands = "play file";
-
+		commands = "'quit', 'q'      : >>Quit the application.\n"
+				 + "'help'           : >>Get all commands.\n"
+				 + "'load', 'l'      : >>Loads all mp3 files within a folder\n"
+				 + "                    >expects a valid path for folder.\n"
+				 + "'play'           : >>Plays the current song (starts from 0s)\n"
+				 + "'stop', 's'      : >>Stops the current song\n"
+				 + "'pause', 'p'     : >>Pauses the current song\n"
+				 + "'resume', 'r'    : >>Resumes a paused song\n"
+				 + "'cSong', 'stats' : >>Displays information about the current song\n"
+				 + "'playlist', 'pl' : >>Displays information about the current playlist\n"
+				 + "'volume', 'v'    : >>Changes the volume, range is [0:100]\n"
+				 + "                    >expects a valid integer.\n"
+				 + "'select'         : >>Allows to select a song from the playlist\n"
+				 + "                    >expects a valid integer (number of the song in the playlist).\n"
+				 + "'seek'           : >>Allows to skip to given time (seconds)\n"
+				 + "                    >expects a valid integer (seconds to jump to).\n";
+				 
+				 
 		autoLoop = false;
 		autoPlay = true;
 		playList = new ArrayList<File>();
@@ -50,6 +66,7 @@ public class MusicPlayerMain {
 				
 				if(!playList.isEmpty()){
 					currentSong = 0;
+					
 				}
 			}
 
@@ -69,7 +86,7 @@ public class MusicPlayerMain {
 				pauseMusic();
 			}
 			
-			if (command.equalsIgnoreCase("currentSong") || command.equalsIgnoreCase("songStats")){
+			if (command.equalsIgnoreCase("cSong") || command.equalsIgnoreCase("stats")){
 				printCurrentSong();
 			}
 			
@@ -96,7 +113,17 @@ public class MusicPlayerMain {
 					System.out.println("Pleace enter a valid [int]");
 				}
 			}
-
+			
+			if(command.equalsIgnoreCase("seek")){
+				System.out.print("\r>");
+				try{
+					int i = sc.nextInt();
+					seek(i);
+				}catch(Exception e){
+					System.out.println("Pleace enter valid seconds [int]");
+				}
+			}
+			
 			System.out.print("\r>>");
 			command = sc.next();
 		}
@@ -174,6 +201,14 @@ public class MusicPlayerMain {
 			System.out.println("First you have to [pause] the music!");
 		}
 	}
+	
+	private void seek(int time){
+		if(mp.getMP() == null){
+			System.out.println("You have to [load] a song first!");
+		}else{
+			mp.seek(time);
+		}
+	}
 
 	private void playMusic() {
 		if (currentSong > -1) {
@@ -210,7 +245,7 @@ public class MusicPlayerMain {
 			}
 			mp.play();
 		} else {
-			System.out.println("The playlist is empty");
+			System.out.println("You have to [load] some songs first!");
 		}
 	}
 

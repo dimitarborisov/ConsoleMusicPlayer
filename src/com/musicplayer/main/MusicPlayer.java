@@ -35,8 +35,8 @@ public class MusicPlayer {
 		mediaPlayer.setVolume(i / 100);
 	}
 
-	public void seek(double time){
-		mediaPlayer.seek(new Duration(time));
+	public void seek(int time){
+		mediaPlayer.seek(new Duration(time*1000));
 	}
 	
 	public double getCurrentTime(){
