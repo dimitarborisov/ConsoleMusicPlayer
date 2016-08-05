@@ -17,7 +17,8 @@ Simple music player controlled from the console (no GUI)
   -                  expects a valid integer (number of the song in the playlist)
 - `seek`           : Allows to skip to given time (seconds)
    -                 expects a valid integer (seconds to jump to)
-
+- 'next'           : >>Plays next song (loops around the playlist)
+- 'prev'           : >>Plays previous song (loops around the playlist)
 ---
 
 This project can be imported into eclipse by `File` -> `Import` -> `General` -> `Existing Project into Workspace`  
