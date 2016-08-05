@@ -19,36 +19,36 @@ public class MusicPlayerMain {
 
 	String commands;
 	int currentSong = -1;
+	int volume = 100;
 
 	public MusicPlayerMain() {
 
-		commands = "'quit', 'q'      : >>Quit the application.\n"
-				 + "'help'           : >>Get all commands.\n"
+		commands = "'quit', 'q'      : >>Quit the application.\n" + "'help'           : >>Get all commands.\n"
 				 + "'load', 'l'      : >>Loads all mp3 files within a folder\n"
 				 + "                    >expects a valid path for folder.\n"
 				 + "'play'           : >>Plays the current song (starts from 0s)\n"
-				 + "'stop', 's'      : >>Stops the current song\n"
-				 + "'pause', 'p'     : >>Pauses the current song\n"
+				 + "'stop', 's'      : >>Stops the current song\n" + "'pause', 'p'     : >>Pauses the current song\n"
 				 + "'resume', 'r'    : >>Resumes a paused song\n"
-				 + "'cSong', 'stats' : >>Displays information about the current song\n"
+			     + "'cSong', 'stats' : >>Displays information about the current song\n"
 				 + "'playlist', 'pl' : >>Displays information about the current playlist\n"
 				 + "'volume', 'v'    : >>Changes the volume, range is [0:100]\n"
 				 + "                    >expects a valid integer.\n"
 				 + "'select'         : >>Allows to select a song from the playlist\n"
 				 + "                    >expects a valid integer (number of the song in the playlist).\n"
 				 + "'seek'           : >>Allows to skip to given time (seconds)\n"
-				 + "                    >expects a valid integer (seconds to jump to).\n";
-				 
+				 + "                    >expects a valid integer (seconds to jump to).\n"
+				 + "'next'           : >>Plays next song (loops around the playlist)\n"
+				 + "'prev'           : >>Plays previous song (loops around the playlist)\n";
 				 
 		autoLoop = false;
-		autoPlay = true;
+		autoPlay = false;
 		playList = new ArrayList<File>();
 		mp = new MusicPlayer();
 		sc = new Scanner(System.in);
 
 	}
 
-	public void startPlayer(){
+	public void startPlayer() {
 		System.out.print("\r>>");
 		String command = sc.next();
 
@@ -61,23 +61,23 @@ public class MusicPlayerMain {
 			if (command.equals("load") || command.equals("l")) {
 				System.out.print("\r>");
 				command = sc.next();
-				
+
 				loadFiles(command);
-				
-				if(!playList.isEmpty()){
+
+				if (!playList.isEmpty()) {
 					currentSong = 0;
-					
+
 				}
 			}
 
 			if (command.equalsIgnoreCase("play")) {
 				playMusic();
 			}
-			
-			if(command.equalsIgnoreCase("resume") || command.equalsIgnoreCase("r")){
+
+			if (command.equalsIgnoreCase("resume") || command.equalsIgnoreCase("r")) {
 				resumeMusic();
 			}
-			
+
 			if (command.equalsIgnoreCase("stop") || command.equalsIgnoreCase("s")) {
 				stopMusic();
 			}
@@ -85,93 +85,106 @@ public class MusicPlayerMain {
 			if (command.equalsIgnoreCase("pause") || command.equalsIgnoreCase("p")) {
 				pauseMusic();
 			}
-			
-			if (command.equalsIgnoreCase("cSong") || command.equalsIgnoreCase("stats")){
+
+			if (command.equalsIgnoreCase("cSong") || command.equalsIgnoreCase("stats")) {
 				printCurrentSong();
 			}
-			
-			if(command.equalsIgnoreCase("playlist") || command.equalsIgnoreCase("pl")){
+
+			if (command.equalsIgnoreCase("playlist") || command.equalsIgnoreCase("pl")) {
 				printPlaylist();
 			}
-			
-			if(command.equalsIgnoreCase("volume") || command.equalsIgnoreCase("v")){
+
+			if (command.equalsIgnoreCase("volume") || command.equalsIgnoreCase("v")) {
 				System.out.print("\r>");
-				try{
+				try {
 					int i = sc.nextInt();
 					setMusicVolume(i);
-				}catch(Exception e){
-					System.out.println("Pleace enter a valid [int]");
+				} catch (Exception e) {
+					System.out.println("Please enter a valid [int]");
 				}
 			}
-			
-			if(command.equalsIgnoreCase("select")){
+
+			if (command.equalsIgnoreCase("select")) {
 				System.out.print("\r>");
-				try{
+				try {
 					int i = sc.nextInt();
 					setCurrentSong(i);
-				}catch(Exception e){
-					System.out.println("Pleace enter a valid [int]");
+				} catch (Exception e) {
+					System.out.println("Please enter a valid [int]");
 				}
 			}
-			
-			if(command.equalsIgnoreCase("seek")){
+
+			if (command.equalsIgnoreCase("seek")) {
 				System.out.print("\r>");
-				try{
+				try {
 					int i = sc.nextInt();
 					seek(i);
-				}catch(Exception e){
-					System.out.println("Pleace enter valid seconds [int]");
+				} catch (Exception e) {
+					System.out.println("Please enter valid seconds [int]");
 				}
 			}
 			
+			if(command.equalsIgnoreCase("prev")){
+				prevSong();
+			}
+			
+			if(command.equalsIgnoreCase("next")){
+				nextSong();
+			}
+
 			System.out.print("\r>>");
 			command = sc.next();
 		}
-		
-		
-		//sc.close();
-		//mp.dispose();
+
+		// sc.close();
+		// mp.dispose();
 		System.out.println("Bye Bye!");
 	}
-	
-	private void setCurrentSong(int i){
-		
-		if(playList.isEmpty() || i > (playList.size()-1)){
+
+	private void setCurrentSong(int i) {
+
+		if (playList.isEmpty() || i > (playList.size() - 1)) {
 			System.out.println("Please enter a valid playlist number");
-		}else{
+		} else {
 			currentSong = i;
-			//playMusic();
+			// playMusic();
 		}
 	}
-	
-	private void setMusicVolume(int i){
+
+	private void setMusicVolume(int i) {
+		volume = i;
 		if (mp.getStatus() != null) {
 			mp.volume(i);
 		} else {
-			System.out.println("First you have to [load] some music!");
+			System.out.println("Volume set to [" + volume + "]");
 		}
 	}
+
+	private void printSongName(){
+		System.out.println("Current song: " + playList.get(currentSong).getName());
+	}
 	
-	private void printCurrentSong(){
-		if((mp.getStatus() == MediaPlayer.Status.PLAYING && mp.getStatus() != null) && currentSong > -1){
+	private void printCurrentSong() {
+		if ((mp.getStatus() == MediaPlayer.Status.PLAYING && mp.getStatus() != null) && currentSong > -1) {
 			printSeparator();
 			System.out.println();
 			System.out.println("Name: " + playList.get(currentSong).getName());
-			System.out.println("Time: [" + (int)mp.getCurrentTime()/1000 + "s / " + (int)mp.getDuartion()/1000 + "s]\n");
+			System.out.println(
+					"Time: [" + (int) mp.getCurrentTime() / 1000 + "s / " + (int) mp.getDuartion() / 1000 + "s]\n");
 			System.out.println(mp.getVisualTime() + "\n");
 			printSeparator();
-		}else{
+		} else {
 			System.out.println("There is no loaded song, please load a song first!");
 		}
 	}
-	
-	private void printPlaylist(){
+
+	private void printPlaylist() {
 		printSeparator();
-		
-		for(int i = 0; i < playList.size(); i++){
-			if(i == currentSong){
-				System.out.println("* " + i + ": " + playList.get(i).getName());
-			}else{
+
+		for (int i = 0; i < playList.size(); i++) {
+			if (i == currentSong) {
+				System.out.println("> " + i + ": " + playList.get(i).getName());
+			} else {
 				System.out.println("  " + i + ": " + playList.get(i).getName());
 			}
 		}
@@ -201,24 +214,57 @@ public class MusicPlayerMain {
 			System.out.println("First you have to [pause] the music!");
 		}
 	}
-	
-	private void seek(int time){
-		if(mp.getMP() == null){
+
+	private void seek(int time) {
+		if (mp.getMP() == null) {
 			System.out.println("You have to [load] a song first!");
-		}else{
+		} else {
 			mp.seek(time);
 		}
+	}
+
+	private void nextSong() {
+		if (!playList.isEmpty()) {
+			if (currentSong == playList.size() - 1) {
+				currentSong = 0;
+
+			} else {
+				currentSong++;
+			}
+			
+			playMusic();
+		} else {
+			System.out.println("Playlist is empty :( !");
+		}
+
+	}
+
+	private void prevSong() {
+		if (!playList.isEmpty()) {
+			if (currentSong == 0) {
+				currentSong = playList.size() - 1;
+			} else {
+				currentSong--;
+			}
+			
+			playMusic();
+		} else {
+			System.out.println("Playlist is empty :( !");
+		}
+
 	}
 
 	private void playMusic() {
 		if (currentSong > -1) {
 			try {
-				if(mp.getMP() != null){
+				if (mp.getMP() != null) {
 					mp.dispose();
 				}
-				
+
 				mp.load(playList.get(currentSong).toURI().toURL());
-				//System.out.println(playList.get(currentSong).getName());
+				// System.out.println(playList.get(currentSong).getName());
+				setMusicVolume(volume);
+				printSongName();
 
 				mp.getMP().setOnEndOfMedia(new Runnable() {
 					@Override
@@ -230,10 +276,10 @@ public class MusicPlayerMain {
 								} else {
 									currentSong = -1;
 								}
-							
-							}else{
+
+							} else {
 								currentSong++;
-							} 
+							}
 						} // autoPlay
 
 						playMusic();
@@ -266,9 +312,8 @@ public class MusicPlayerMain {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	private void printSeparator(){
+
+	private void printSeparator() {
 		System.out.println("-------------------------------");
 	}
 }
