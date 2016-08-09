@@ -19,8 +19,16 @@ Simple music player controlled from the console (no GUI)
    -                 expects a valid integer (seconds to jump to)
 - `next`           : Plays next song (loops around the playlist)
 - `prev`           : Plays previous song (loops around the playlist)
-
+- `clear`          : Removes all songs from the playlist  
+- `remove`         : Removes a song
+   -                 expects a valid number from the playlist [0:n]  
 ---
 
-This project can be imported into eclipse by `File` -> `Import` -> `General` -> `Existing Project into Workspace`  
-To run and test it directly there is an included `Jar` that can be used. The file is located at [`jar/MusicPlayer.jar`](jar/MusicPlayer.jar)
+This project can be imported into eclipse by `File` -> `Import` -> `General` -> `Existing Project into Workspace`
+
+## Run it
+To run and test it directly there is an included `Jar` that can be used. The file is located at [`jar/MusicPlayer.jar`](jar/MusicPlayer.jar).  
+To start it from cmd/terminal navigate to where the jar is downloaded and use `java -jar MusicPlayer.jar`.
+
+##NOTE
+The application does not work with OpenJDK, please consider installing Oracle JRE/JDK.

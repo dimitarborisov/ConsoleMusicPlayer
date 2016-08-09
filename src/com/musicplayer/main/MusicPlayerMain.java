@@ -23,23 +23,26 @@ public class MusicPlayerMain {
 
 	public MusicPlayerMain() {
 
-		commands = "'quit', 'q'      : >>Quit the application.\n" + "'help'           : >>Get all commands.\n"
+		commands = "'quit', 'q'      : >>Quit the application\n" + "'help'           : >>Get all commands\n"
 				 + "'load', 'l'      : >>Loads all mp3 files within a folder\n"
-				 + "                    >expects a valid path for folder.\n"
+				 + "                    >expects a valid path for folder\n"
 				 + "'play'           : >>Plays the current song (starts from 0s)\n"
 				 + "'stop', 's'      : >>Stops the current song\n" + "'pause', 'p'     : >>Pauses the current song\n"
 				 + "'resume', 'r'    : >>Resumes a paused song\n"
 			     + "'cSong', 'stats' : >>Displays information about the current song\n"
 				 + "'playlist', 'pl' : >>Displays information about the current playlist\n"
 				 + "'volume', 'v'    : >>Changes the volume, range is [0:100]\n"
-				 + "                    >expects a valid integer.\n"
+				 + "                    >expects a valid integer\n"
 				 + "'select'         : >>Allows to select a song from the playlist\n"
-				 + "                    >expects a valid integer (number of the song in the playlist).\n"
+				 + "                    >expects a valid integer (number of the song in the playlist)\n"
 				 + "'seek'           : >>Allows to skip to given time (seconds)\n"
-				 + "                    >expects a valid integer (seconds to jump to).\n"
+				 + "                    >expects a valid integer (seconds to jump to)\n"
 				 + "'next'           : >>Plays next song (loops around the playlist)\n"
-				 + "'prev'           : >>Plays previous song (loops around the playlist)\n";
-				 
+				 + "'prev'           : >>Plays previous song (loops around the playlist)\n"
+				 + "'clear'          : >>Removes all songs from the playlist\n"
+				 + "'remove'         : >>Removes a song\n"
+				 + "                    >expects a valid number from the playlist [0:n]\n";
+		
 		autoLoop = false;
 		autoPlay = false;
 		playList = new ArrayList<File>();
@@ -113,6 +116,16 @@ public class MusicPlayerMain {
 					System.out.println("Please enter a valid [int]");
 				}
 			}
+			
+			if (command.equalsIgnoreCase("remove")) {
+				System.out.print("\r>");
+				try {
+					int i = sc.nextInt();
+					removeSong(i);
+				} catch (Exception e) {
+					System.out.println("Please enter a valid [int]");
+				}
+			}
 
 			if (command.equalsIgnoreCase("seek")) {
 				System.out.print("\r>");
@@ -131,6 +144,10 @@ public class MusicPlayerMain {
 			if(command.equalsIgnoreCase("next")){
 				nextSong();
 			}
+			
+			if(command.equalsIgnoreCase("clear")){
+				clear();
+			}
 
 			System.out.print("\r>>");
 			command = sc.next();
@@ -141,6 +158,21 @@ public class MusicPlayerMain {
 		System.out.println("Bye Bye!");
 	}
 
+	
+	private void clear(){
+		playList.clear();
+		currentSong = -1;
+	}
+	
+	private void removeSong(int i){
+		try{
+			playList.remove(i);
+		}catch(Exception e){
+			System.out.println("Please enter a valid playlist ID[int]");
+		}
+		
+	}
+	
 	private void setCurrentSong(int i) {
 
 		if (playList.isEmpty() || i > (playList.size() - 1)) {
@@ -255,7 +287,7 @@ public class MusicPlayerMain {
 	}
 
 	private void playMusic() {
-		if (currentSong > -1) {
+		if (currentSong > -1 && !playList.isEmpty()) {
 			try {
 				if (mp.getMP() != null) {
 					mp.dispose();
