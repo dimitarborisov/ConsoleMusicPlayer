@@ -22,6 +22,7 @@ Simple music player controlled from the console (no GUI)
 - `clear`          : Removes all songs from the playlist  
 - `remove`         : Removes a song
    -                 expects a valid number from the playlist [0:n]  
+
 ---
 
 This project can be imported into eclipse by `File` -> `Import` -> `General` -> `Existing Project into Workspace`
